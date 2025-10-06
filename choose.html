@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Source Selection</title>
+</head>
+<body style="font-family: Arial; text-align: center; margin-top: 100px;">
+    <h2>Select Video Source</h2>
+    <form action="/set_source" method="POST" enctype="multipart/form-data">
+        <button type="submit" name="choice" value="webcam">Use Webcam</button>
+    </form>
+    <br>
+    <form action="/set_source" method="POST" enctype="multipart/form-data">
+        <input type="file" name="video" accept="video/*" required>
+        <button type="submit" name="choice" value="upload">Upload Video</button>
+    </form>
+</body>
+</html>
