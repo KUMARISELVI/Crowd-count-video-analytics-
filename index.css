@@ -1,0 +1,217 @@
+/* ---------------- General Body Styles ---------------- */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg,white, #2193b0);
+  margin: 0;
+  padding: 20px;
+  color: black;
+  min-height: 100vh;
+
+  /* Center everything */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* ---------------- Heading ---------------- */
+h2 {
+  margin-bottom: 20px;
+  color: black;
+  font-size: 28px;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 5px rgba(0,0,0,0.3);
+}
+
+/* ---------------- Video ---------------- */
+video {
+  display: block;
+  margin: 0 auto 25px auto;
+  max-width: 80%;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+  border: 3px solid #fff;
+}
+
+/* ---------------- Table ---------------- */
+table {
+  border-collapse: collapse;
+  width: 85%;
+  margin: 20px auto;
+  background-color: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+  color: #333;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: center;
+  font-size: 15px;
+}
+
+th {
+  background: linear-gradient(135deg, #ff512f, #dd2476);
+  color: black;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+}
+
+td input[type="text"] {
+  width: 120px;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  outline: none;
+  transition: 0.3s;
+}
+
+td input[type="text"]:focus {
+  border-color: #2193b0;
+  box-shadow: 0 0 6px rgba(33,147,176,0.6);
+}
+
+/* ---------------- Buttons ---------------- */
+button {
+  background: linear-gradient(135deg, #56ab2f, #a8e063);
+  color: black;
+  border: none;
+  padding: 7px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #43cea2, #185a9d);
+}
+
+/* Delete button different color */
+form[action*="delete_zone"] button {
+  background: linear-gradient(135deg, #ff416c, #ff4b2b);
+}
+
+form[action*="delete_zone"] button:hover {
+  background: linear-gradient(135deg, #c31432, #240b36);
+}
+
+/* ---------------- Empty Message ---------------- */
+p {
+  font-size: 18px;
+  color: black;
+  margin-top: 30px;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+}
+
+/* Container */
+.container {
+  width: 350px;
+}
+
+/* Card Box */
+.form-box {
+  background: #fff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+/* Headings */
+.form-box h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Inputs */
+.input-group {
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+  color: #555;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Button */
+.btn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: #007bff;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.btn:hover {
+  background: #0056b3;
+}
+
+/* Toggle text */
+.toggle-text {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.toggle-text a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.toggle-text a:hover {
+  text-decoration: underline;
+}
+
+/* Flash messages */
+.flashes {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.flash-success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.flash-error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+.flash-info {
+  background: #cce5ff;
+  color: #004085;
+  border: 1px solid #b8daff;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
