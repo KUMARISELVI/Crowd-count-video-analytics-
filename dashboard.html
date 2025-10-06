@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+body { font-family: Arial, sans-serif; background:#1E2A38; color:#fff; margin:0; padding:0; display:flex; }
+.sidebar { width:200px; background:#283645; padding:20px; display:flex; flex-direction:column; height:100vh; }
+.sidebar h3 { margin-top:0; margin-bottom:20px; text-align:center; }
+.sidebar a { color:#fff; text-decoration:none; padding:10px; margin:5px 0; border-radius:5px; background:#1E2A38; text-align:center; }
+.sidebar a:hover { background:#4CAF50; }
+.main { flex:1; padding:20px; overflow-y:auto; }
+h2 { text-align:center; padding:15px; }
+.dashboard-container { display:flex; flex-wrap:wrap; justify-content:space-around; margin:20px; }
+.panel { background:#283645; padding:20px; border-radius:8px; margin:10px; flex:1 1 400px; }
+.zone-occupancy { margin-top:10px; }
+.zone { display:flex; justify-content:space-between; padding:5px 0; border-bottom:1px solid #444; }
+.alert { color:red; font-weight:bold; margin-top:10px; }
+.heatmap { display:flex; flex-wrap:wrap; margin-top:10px; }
+.heat-cell { width:20px; height:20px; margin:2px; border-radius:50%; opacity:0.8; }
+img#videoPlayer { display:block; margin:0 auto 20px auto; max-width:90%; border-radius:8px; }
+</style>
+</head>
+<body>
+
+<h2>Milestone 3: Live Dashboard</h2>
+
+{% if video %}
+<video id="videoPlayer" controls>
+    <source src="{{ url_for('uploaded_file', filename=video.split('/')[-1]) }}" type="video/mp4">
+    Your browser does not support HTML5 video.
+</video>
+{% endif %}
+
+<div class="dashboard-container">
+    <div class="panel">
+        <h3>Real-time Population Analytics</h3>
+        <canvas id="populationChart" height="200"></canvas>
+    </div>
+
+    <div class="panel">
+        <h3>Zone Occupancy</h3>
+        <div class="zone-occupancy" id="zoneOccupancy"></div>
+        <div class="alert" id="alertMessage"></div>
+    </div>
+
+    <div class="panel">
+        <h3>Activity Heatmap</h3>
+        <div class="heatmap" id="heatmap"></div>
+    </div>
+</div>
+
+<script>
+const ctx = document.getElementById('populationChart').getContext('2d');
+let zoneLabels = [];
+let zonePopulationHistory = {}; // keep history for line chart
+let maxHistoryPoints = 20;
+
+const populationChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: [],
+        datasets: []
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: { position: 'top', labels: { color:'#fff' } },
+        },
+        scales: {
+            x: { ticks: { color:'#fff' } },
+            y: { beginAtZero:true, ticks:{color:'#fff'} }
+        }
+    }
+});
+
+function updateDashboard() {
+    fetch('/get_population')
+    .then(res => res.json())
+    .then(data => {
+        let chartLabels = populationChart.data.labels;
+        let timeLabel = new Date().toLocaleTimeString();
+
+        chartLabels.push(timeLabel);
+        if(chartLabels.length > maxHistoryPoints) chartLabels.shift();
+
+        // Update zone occupancy panel
+        const occupancyDiv = document.getElementById('zoneOccupancy');
+        occupancyDiv.innerHTML = '';
+
+        // Heatmap generation
+        const heatmapDiv = document.getElementById('heatmap');
+        heatmapDiv.innerHTML = '';
+
+        let alertMsg = '';
+
+        data.forEach(zone => {
+            // Zone occupancy table
+            const div = document.createElement('div');
+            div.className = 'zone';
+            div.innerHTML = `<span>${zone.label}</span><span>${zone.population}</span>`;
+            occupancyDiv.appendChild(div);
+
+            // Heatmap
+            const cell = document.createElement('div');
+            cell.className = 'heat-cell';
+            if(zone.population >= 4) cell.style.background='red';
+            else if(zone.population >= 2) cell.style.background='orange';
+            else cell.style.background='green';
+            heatmapDiv.appendChild(cell);
+
+            // Alert
+            if(zone.population >= 5) alertMsg = `${zone.label} capacity approaching limit!`;
+
+            // Line chart data
+            if(!zonePopulationHistory[zone.label]) zonePopulationHistory[zone.label] = [];
+            zonePopulationHistory[zone.label].push(zone.population);
+            if(zonePopulationHistory[zone.label].length > maxHistoryPoints) zonePopulationHistory[zone.label].shift();
+        });
+
+        document.getElementById('alertMessage').innerText = alertMsg;
+
+        // Update chart datasets
+        populationChart.data.labels = chartLabels;
+        populationChart.data.datasets = Object.keys(zonePopulationHistory).map(label => ({
+            label: label,
+            data: zonePopulationHistory[label],
+            borderColor: getRandomColor(label),
+            fill:false,
+            tension:0.3
+        }));
+        populationChart.update();
+    });
+}
+
+// Random color generator for each zone
+function getRandomColor(key) {
+    const colors = { red:'#FF4C4C', green:'#4CAF50', blue:'#2196F3', orange:'#FF9800', purple:'#9C27B0', teal:'#00BCD4' };
+    return colors[key] || '#'+Math.floor(Math.random()*16777215).toString(16);
+}
+
+// Refresh dashboard every 2 seconds
+setInterval(updateDashboard, 2000);
+updateDashboard();
+</script>
+</body>
+</html>
