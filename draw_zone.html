@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Draw Zones</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <h2>Draw Zones</h2>
+  <div id="video-container">
+    <video id="video" width="600" controls>
+      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+    </video>
+    <canvas id="canvas"></canvas>
+  </div>
+  <input type="text" id="zoneLabel" placeholder="Enter Zone Label">
+  <button id="saveZone">Save Zone</button>
+  <script src="{{ url_for('static', filename='draw_zone.js') }}"></script>
+</body>
+</html>
