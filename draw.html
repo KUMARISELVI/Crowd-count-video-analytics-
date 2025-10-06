@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='draw.css') }}">
+
+  <title>Draw Zones</title>
+  <style>
+    #canvas {
+      position: absolute;
+      left: 0;
+      top: 0;
+      border: 1px solid red;
+    }
+    .video-container {
+      position: relative;
+      display: inline-block;
+    }
+  </style>
+</head>
+<body>
+  <h2>Draw Zones on Video</h2>
+
+  <div class="video-container">
+    <video id="video" width="640" height="360" controls>
+  <source src="{{ url_for('uploaded_file', filename=video_filename) }}" type="video/mp4">
+  Your browser does not support HTML5 video.
+</video>
+
+
+    <canvas id="canvas" width="640" height="360"></canvas>
+  </div>
+
+  <button id="saveZones">Save Zones</button>
+
+  <!-- JavaScript -->
+  <script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext("2d");
+    let drawing = false;
+    let startX, startY;
+    let zones = [];
+
+    canvas.addEventListener("mousedown", e => {
+      drawing = true;
+      const rect = canvas.getBoundingClientRect();
+      startX = e.clientX - rect.left;
+      startY = e.clientY - rect.top;
+    });
+
+    canvas.addEventListener("mousemove", e => {
+      if (!drawing) return;
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawAllZones();
+      ctx.strokeStyle = "red";
+      ctx.strokeRect(startX, startY, mouseX - startX, mouseY - startY);
+    });
+
+    canvas.addEventListener("mouseup", e => {
+      drawing = false;
+      const rect = canvas.getBoundingClientRect();
+      const endX = e.clientX - rect.left;
+      const endY = e.clientY - rect.top;
+
+      zones.push({
+        x: startX / canvas.width,
+        y: startY / canvas.height,
+        width: (endX - startX) / canvas.width,
+        height: (endY - startY) / canvas.height,
+        label: "Zone " + (zones.length + 1)
+      });
+      drawAllZones();
+    });
+
+    function drawAllZones() {
+      zones.forEach(z => {
+        ctx.strokeStyle = "red";
+        ctx.strokeRect(z.x * canvas.width, z.y * canvas.height, z.width * canvas.width, z.height * canvas.height);
+      });
+    }
+
+    document.getElementById("saveZones").addEventListener("click", () => {
+        fetch("/draw", {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({zones})
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.status === "success") {
+            alert("Zones saved!");
+            window.location.href = "/dashboard"; // Redirect to dashboard
+            } else {
+            alert("Error saving zones");
+            }
+        });
+    });
+  </script>
+</body>
+</html>
