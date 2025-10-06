@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Preview Zones</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <h2>Preview Zones</h2>
+  <div id="preview-container">
+    <video id="previewVideo" width="600" autoplay loop muted>
+      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+    </video>
+    <canvas id="previewCanvas"></canvas>
+  </div>
+  <script src="{{ url_for('static', filename='preview_zone.js') }}"></script>
+</body>
+</html>
