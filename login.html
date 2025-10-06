@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const toggleLink = document.querySelector(".toggle-text a");
+      toggleLink.addEventListener("click", (e) => {
+        // Optional: can show a message or animate redirect
+        console.log("Redirecting to Register page");
+      });
+    });
+  </script>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Flash messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul class="flashes">
+          {% for category, message in messages %}
+            <li class="flash-{{ category }}">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <!-- Login Form -->
+    <div class="form-box">
+      <h2>Login</h2>
+      <form action="/login" method="POST">
+        <div class="input-group">
+          <label for="loginEmail">Email</label>
+          <input type="email" name="email" id="loginEmail" required />
+        </div>
+        <div class="input-group">
+          <label for="loginPassword">Password</label>
+          <input type="password" name="password" id="loginPassword" required minlength="6" />
+        </div>
+        <button type="submit" class="btn">Login</button>
+        <p class="toggle-text">Don't have an account?
+          <a href="{{ url_for('register') }}">Register</a>
+        </p>
+      </form>
+    </div>
+
+  </div>
+</body>
+</html>
